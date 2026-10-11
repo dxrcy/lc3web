@@ -26,16 +26,18 @@ export const lc3os = (function() {
         0x0406: 0xFE00,
         0x0407: 0xFE02,
         // Implementation of OUT
-        0x0430: 0x3E0A,
-        0x0431: 0x3208,
-        0x0432: 0xA205,
-        0x0433: 0x07FE,
-        0x0434: 0xB004,
-        0x0435: 0x2204,
-        0x0436: 0x2E04,
-        0x0437: 0xC1C0,
-        0x0438: 0xFE04,
-        0x0439: 0xFE06,
+        0x0430: 0x3E0A, //      ST R7, SaveR7       ; Save registers
+        0x0431: 0x3208, //      ST R1, SaveR1
+        0x0432: 0xA205, // Spin LDI R1, AddrDsr     ; Spin until DSR==ready
+        0x0433: 0x07FE, //      BRzp Spin
+        0x0434: 0xB004, //      STI R0, AddrDdr     ; Store character in DDR
+        0x0435: 0x2204, //      LD R1, SaveR1       ; Restore registers
+        0x0436: 0x2E04, //      LD R7, SaveR7
+        0x0437: 0xC1C0, //      RET                 ; Return from trap
+        0x0438: 0xFE04, // AddrDsr
+        0x0439: 0xFE06, // AddrDdr
+        // 0x043A: SaveR1
+        // 0x043B: SaveR7
         // Implementation of PUTS
         0x0450: 0x3E16,
         0x0451: 0x3012,
