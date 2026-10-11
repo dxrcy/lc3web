@@ -102,36 +102,44 @@ export const lc3os = (function() {
         0x0500: 0xF3FD,
         0x0501: 0xF3FE,
         0x0502: 0xFF00,
+        // Catch runaway PC: print and HALT
+        0xFD00: 0x3E3E,     // ST R7, SaveR7        ; Save registers
+        0xFD01: 0x303C,     // ST R0, SaveR0
+        0xFD02: 0x2007,     // LD R0, RunawayChar   ; Print NUL (??)
+        0xFD03: 0xF021,     // OUT
+        0xFD04: 0xE006,     // LEA R0, RunawayMsg   ; Print "" (??)
+        0xFD05: 0xF022,     // PUTS
+        0xFD06: 0xF025,     // HALT                 ; Halt
+        0xFD07: 0x2036,     // LD R0, SaveR0        ; Restore registers
+        0xFD08: 0x2E36,     // LD R7, SaveR7
+        0xFD09: 0xC1C0,     // RET                  ; Return (where?)
+        // 0xFD0A: RunawayChar (0x0000)
+        // 0xFD0B: RunawayMsg  (0x0000)
+        // 0xFD3E: SaveR0
+        // 0xFD3F: SaveR7
         // Implementation of HALT
-        0xFD00: 0x3E3E,
-        0xFD01: 0x303C,
-        0xFD02: 0x2007,
-        0xFD03: 0xF021,
-        0xFD04: 0xE006,
-        0xFD05: 0xF022,
-        0xFD06: 0xF025,
-        0xFD07: 0x2036,
-        0xFD08: 0x2E36,
-        0xFD09: 0xC1C0,
-        0xFD70: 0x3E0E,
-        0xFD71: 0x320C,
-        0xFD72: 0x300A,
-        0xFD73: 0xE00C,
-        0xFD74: 0xF022,
-        0xFD75: 0xA22F,
-        0xFD76: 0x202F,
-        0xFD77: 0x5040,
-        0xFD78: 0xB02C,
-        0xFD79: 0x2003,
-        0xFD7A: 0x2203,
-        0xFD7B: 0x2E03,
-        0xFD7C: 0xC1C0,
-        /* the "halting the processor" message goes here */
-        0xFDA5: 0xFFFE,
-        0xFDA6: 0x7FFF,
+        0xFD70: 0x3E0E,     // ST R7, SaveR7        ; Save registers
+        0xFD71: 0x320C,     // ST R1, SaveR1
+        0xFD72: 0x300A,     // ST R0, SaveR0
+        0xFD73: 0xE00C,     // LEA R0, HaltMsg      ; Print halt message
+        0xFD74: 0xF022,     // PUTS
+        0xFD75: 0xA22F,     // LDI R1, AddrMcr      ; Clear high bit of MCR
+        0xFD76: 0x202F,     // LD R0, ZeroHighBit
+        0xFD77: 0x5040,     // AND R0, R1, R0
+        0xFD78: 0xB02C,     // STI R0, AddrMcr
+        0xFD79: 0x2003,     // LD R0, SaveR0        ; Restore registers
+        0xFD7A: 0x2203,     // LD R1, SaveR1
+        0xFD7B: 0x2E03,     // LD R7, SaveR7
+        0xFD7C: 0xC1C0,     // RET                  ; End of trap
+        // 0xFD7D: SaveR0
+        // 0xFD7E: SaveR1
+        // 0xFD7F: SaveR7
+        // 0xFD80: HaltMsg (the "halting the processor" message goes here)
+        0xFDA5: 0xFFFE, // AddrMcr
+        0xFDA6: 0x7FFF, // ZeroHighBit
         // Display status register
         0xFE04: 0x8000,
-        // Machine control register
+        // Machine control register (MCR)
         0xFFFE: 0xFFFF,
     };
 
